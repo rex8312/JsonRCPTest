@@ -2,11 +2,9 @@ from __future__ import print_function
 import requests
 import json
 from gevent.threadpool import ThreadPool
-import gevent
 import functools
 import time
 import random
-from utils import *
 
 
 class Worker(object):
@@ -64,38 +62,6 @@ class Future:
         self.result.rawlink(_func)
         return self
 
-        # while True:
-        #     if self.result.ready():
-        #         break
-        #     else:
-        #         gevent.sleep(0)
-        #
-        # func(self.result.get().get('result', self.result.get().get('error')))
-
-
-class FutureManager:
-    __metaclass__ = Singleton
-    futures = list()
-
-    def process(self):
-        future = self.futures.pop(0)
-        future.get()
-        if future.ready():
-            future.callback(future.get().get('result'))
-        else:
-            self.futures.append(future)
-        # print(future.ready(), callback)
-        print(len(self.futures))
-
-    def join(self):
-        while True:
-            if len(self.futures) == 0:
-                return
-            else:
-                self.process()
-
-
-
 
 if __name__ == "__main__":
     worker = Worker('http://127.0.0.1:8080/rpc')
@@ -106,7 +72,6 @@ if __name__ == "__main__":
         print(worker.ask("power", 2, 6).get())
         print(worker.ask("echo", "echome!").get())
         print(time.clock() - stime)
-        print()
 
     def non_blocking():
         print("** non-blocking **")
@@ -133,5 +98,6 @@ if __name__ == "__main__":
         print("total elapsed time: {}".format(ttime))
 
     blocking()
+    print()
     non_blocking()
 
