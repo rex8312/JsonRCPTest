@@ -3,18 +3,13 @@
 import os
 import sys
 import time
+import bottle
 import gevent
 import gevent.monkey
 
 gevent.monkey.patch_all()
 
-
-# Fix paths
-# rootdir = os.path.dirname(os.path.abspath(__file__))
-# sys.path.append(rootdir)
-# os.chdir(rootdir)
-
-import bottle
+# Should be import after "gevent.monkey.patch_all()"
 import bottle_jsonrpc
 
 
@@ -56,11 +51,10 @@ def echo(msg):
     return msg
 
 
-bottle.debug(True)
+bottle.debug(False)
 
 if __name__ == '__main__':
     # Standalone web server
-    # bottle.run(reloader=True, server="tornado")
     bottle.run(reloader=True, server="gevent")
 else:
     # Running under WSGI (probably apache)
